@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+
+  web:
+    container_name: webapp
+    build: ./env/docker
+    volumes:
+      - ./app:/var/www/html
+    ports:
+      - 8000:80
+    depends_on:
+      - db
+      - phpmyadmin
+    env_file: ./env/docker/.env
+
+  db:
+    container_name: database
+    image: mysql:latest
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - 3306:3306
+    env_file: ./env/docker/.env
+
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin/phpmyadmin:latest
+    ports:
+      - 8080:80
+    volumes:
+      - ./uploads.ini:/usr/local/etc/php/conf.d/php-phpmyadmin.ini
+    env_file: ./env/docker/.env
